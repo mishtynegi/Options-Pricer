@@ -1,0 +1,1884 @@
+<!DOCTYPE html>
+<htmllang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <meta content="IE=edge" http-equiv="X-UA-Compatible">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src ="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet">
+  <title>Mini Option Pricer</title>
+  <script>
+    $( function() {
+      $( "#tabs" ).tabs({
+        activate: function( event, ui ) {}
+      });
+    });
+  </script>
+</head>
+
+<body>
+
+  <header>
+    <div class="intro">
+      <h1>Mini Option Pricer</h1>
+      <h2>Techniques in Computational Finance</h2>
+    </div>
+
+  </header>
+
+  <div class="wrapper">
+    <section class="about">
+      <div class="about-content">
+        <br>
+        <br>
+        <hr>
+          <h2>Happy experimenting!!!</h2>
+      </div>
+    </section>
+  </div>
+
+  <div class="wrapper">
+    <section class="about">
+      <div class="about-content" id="tabs">
+        <ul>
+            <li><a href="#tabs-1">European</a></li>
+            <li><a href="#tabs-2">American</a></li>
+            <li><a href="#tabs-3">Asian</a></li>
+            <li><a href="#tabs-4">Basket</a></li>
+            <li><a href="#tabs-5">Implied Volatility</a></li>
+            <li><a href="#tabs-6">Barrier</a></li>
+        </ul>
+
+        <div id="tabs-1">
+          <div class="scrollbar">
+            <div class="calculatorcontent margintop10 cal_SO">
+              <table border="0" cellpadding="5" cellspacing="0" style="margin: 0px 0 10px 0; max-width: 715px;">
+                  <tbody>
+                    <tr>
+                      <td width="28%">
+                        Pricing Model
+                      </td>
+                      <td colspan="4">
+                        <select name="select" id="select_pricingmodel_eur" style="max-width: 500px; min-width: 300px" autocomplete="off">
+                          <option selected="selected" value="Black-Scholes">Black Scholes</option><option value="Monte Carlo">Monte Carlo</option>
+                        </select>
+                      </td>
+                    </tr>
+                  </tbody>
+              </table>
+              <table id="table_eur_BS" border="0" class="cal_searchtable" style="max-width: 960px;">
+                <tbody>
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Stock Price</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="underlying" id="underlying_eur_BS" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Strike Price</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="strike" id="strike_eur_BS" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Interest rate</span><span class="floatright"> % </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="interest_rate" id="interest_rate_eur_BS" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Repo rate</span><span class="floatright"> % </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="repo_rate" id="repo_rate_eur_BS" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Time</span><span class="floatright"> yrs </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="time" id="time_eur_BS" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Volatility</span><span class="floatright"> % </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="volatility" id="volatility_eur_BS" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      Option Type
+                    </td>
+                    <td>
+                      <input type="radio" name="style" id="RadioOT_1_eur_BS" value="call" checked="" autocomplete="off">
+                      <span class="textdisable">Call</span>
+                    </td>
+                    <td colspan="2">
+                      <input name="style" type="radio" id="RadioOT_2_eur_BS" value="put" checked="" autocomplete="off">
+                      <span>Put</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <button class="btn_reset floatleft marginright10" href="javascript:void(0)" title="Reset" id="reset_eur_BS">Reset</button>
+                      <button class="btn_calculate floatleft" href="javascript:void(0)" title="Calculate" id="calculate_eur_BS">Calculate</button>
+                    </td>
+                    <td>
+                      <div id="result_eur_BS">
+                        <a class="btn_loaddefaultdata floatleft">Result: 
+                          <output type="text" name="result_eur_BS_val" id="result_eur_BS_val" style="width: 150px">
+                        </output>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="4">
+                      <span class="ari_grey11 margintop5"><em>Please Note<br>
+                        For loading the values, please follow the format provided next to the input boxes (e.g., interest rate = 5% and not 0.05). There is check for invalid input format. However, there is no check for input domain.<br> 
+                        Monte Carlo implementation for barrier options can take a minute for simulations around 100,000.<br>
+                        Implied Volatity cannot be calculated for all options. Therefore, it is normal to have NAN in the result.</em>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table id="table_eur_MC" border="0" class="cal_searchtable" style="max-width: 960px;">
+                <tbody>
+                <tr>
+                  <td width="24.1%">
+                    <span class="floatleft">Stock Price</span><span class="floatright"> $ </span>
+                  </td>
+                  <td width="23.7%">
+                    <input type="text" name="underlying" id="underlying_eur_MC" style="width: 150px" autocomplete="off">
+                  </td>
+                  <td width="24.1%">
+                    <span class="floatleft">Strike Price</span><span class="floatright"> $ </span>
+                  </td>
+                  <td width="23.7%">
+                    <input type="text" name="strike" id="strike_eur_MC" style="width: 150px" autocomplete="off">
+                  </td>
+                </tr>
+
+                <tr>
+                  <td width="24.1%">
+                    <span class="floatleft">Interest rate</span><span class="floatright"> % </span>
+                  </td>
+                  <td width="23.7%">
+                    <input type="text" name="interest_rate" id="interest_rate_eur_MC" style="width: 150px" autocomplete="off">
+                  </td>
+                  <td width="24.1%">
+                    <span class="floatleft">Number of Steps</span><span class="floatright">  </span>
+                  </td>
+                  <td width="23.7%">
+                    <input type="text" name="number_steps" id="number_steps_eur_MC" style="width: 150px" autocomplete="off">
+                  </td>
+                </tr>
+
+                <tr>
+                  <td width="24.1%">
+                    <span class="floatleft">Time</span><span class="floatright"> yrs </span>
+                  </td>
+                  <td width="23.7%">
+                    <input type="text" name="time" id="time_eur_MC" style="width: 150px" autocomplete="off">
+                  </td>
+                  <td width="24.1%">
+                    <span class="floatleft">Volatility</span><span class="floatright"> % </span>
+                  </td>
+                  <td width="23.7%">
+                    <input type="text" name="volatility" id="volatility_eur_MC" style="width: 150px" autocomplete="off">
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Option Type
+                  </td>
+                  <td>
+                    <input type="radio" name="style" id="RadioOT_1_eur_MC" value="call" checked="" autocomplete="off">
+                    <span class="textdisable">Call</span>
+                  </td>
+                  <td colspan="2">
+                    <input name="style" type="radio" id="RadioOT_2_eur_MC" value="put" checked="" autocomplete="off">
+                    <span>Put</span>
+                  </td>
+                </tr>
+                <tr>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <button class="btn_reset floatleft marginright10" href="javascript:void(0)" title="Reset" id="reset_eur_MC">Reset</button>
+                    <button class="btn_calculate floatleft" href="javascript:void(0)" title="Calculate" id="calculate_eur_MC">Calculate</button>
+                  </td>
+                  <td>
+                    <div id="result_eur_MC">
+                      <a class="btn_loaddefaultdata floatleft">Result: 
+                        <output type="text" name="result_eur_MC_val" id="result_eur_MC_val" style="width: 150px">
+                      </output>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="4">
+                      <span class="ari_grey11 margintop5"><em>Please Note<br>
+                        For loading the values, please follow the format provided next to the input boxes (e.g., interest rate = 5% and not 0.05). There is check for invalid input format. However, there is no check for input domain.<br> 
+                        Monte Carlo implementation for barrier options can take a minute for simulations around 100,000.<br>
+                        Implied Volatity cannot be calculated for all options. Therefore, it is normal to have NAN in the result.</em>
+                      </span>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>  
+          </div>
+        </div>
+        <div id="tabs-2">
+          <div class="scrollbar">
+            <div class="calculatorcontent margintop10 cal_SO">
+              <table border="0" cellpadding="5" cellspacing="0" style="margin: 0px 0 10px 0; max-width: 715px;">
+                <tbody>
+                  <tr>
+                    <td width="28%">
+                      Pricing Model
+                    </td>
+                    <td colspan="4">
+                      <select name="select" id="select_pricingmodel_amer" style="max-width: 500px; min-width: 300px" autocomplete="off">
+                        <option selected="selected" value="Binomial">Binomial</option><option value="Monte Carlo">Monte Carlo</option>
+                      </select>
+                    </td>
+                    </tr>
+                  </tr>
+                </tbody>
+              </table>
+              <table id="table_amer_BN" border="0" class="cal_searchtable" style="max-width: 960px;">
+                <tbody>
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Stock Price</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="underlying" id="underlying_amer_BN" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Strike Price</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="strike" id="strike_amer_BN" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Interest rate</span><span class="floatright"> % </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="interest_rate" id="interest_rate_amer_BN" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Number of steps</span><span class="floatright"></span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="number_steps" id="number_steps_amer_BN" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Time</span><span class="floatright"> yrs </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="time" id="time_amer_BN" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Volatility</span><span class="floatright"> % </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="volatility" id="volatility_amer_BN" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Option Type
+                    </td>
+                    <td>
+                      <input type="radio" name="style" id="RadioOT_1_amer_BN" value="call" checked="" autocomplete="off">
+                      <span class="textdisable">Call</span>
+                    </td>
+                    <td colspan="2">
+                      <input name="style" type="radio" id="RadioOT_2_amer_BN" value="put" checked="" autocomplete="off">
+                      <span>Put</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <button class="btn_reset floatleft marginright10" href="javascript:void(0)" title="Reset" id="reset_amer_BN">Reset</button>
+                      <button class="btn_calculate floatleft" href="javascript:void(0)" title="Calculate" id="calculate_amer_BN">Calculate</button>
+                    </td>
+                    <td>
+                      <div id="result_amer_BN">
+                        <a class="btn_loaddefaultdata floatleft">Result: 
+                          <output type="text" name="result_amer_BN_val" id="result_amer_BN_val" style="width: 150px">
+                        </output>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="4">
+                      <span class="ari_grey11 margintop5"><em>Please Note<br>
+                        For loading the values, please follow the format provided next to the input boxes (e.g., interest rate = 5% and not 0.05). There is check for invalid input format. However, there is no check for input domain.<br> 
+                        Monte Carlo implementation for barrier options can take a minute for simulations around 100,000.<br>
+                        Implied Volatity cannot be calculated for all options. Therefore, it is normal to have NAN in the result.</em>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table id="table_amer_MC" border="0" class="cal_searchtable" style="max-width: 960px;">
+                <tbody>
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Stock Price</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="underlying" id="underlying_amer_MC" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Strike Price</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="strike" id="strike_amer_MC" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Interest rate</span><span class="floatright"> % </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="interest_rate" id="interest_rate_amer_MC" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Number of steps</span><span class="floatright"></span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="number_steps" id="number_steps_amer_MC" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Time</span><span class="floatright"> yrs </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="time" id="time_amer_MC" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Volatility</span><span class="floatright"> % </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="volatility" id="volatility_amer_MC" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Number of Paths</span><span class="floatright"></span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="number_paths" id="number_paths_amer_MC" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Option Type
+                    </td>
+                    <td>
+                      <input type="radio" name="style" id="RadioOT_1_amer_MC" value="call" checked="" autocomplete="off">
+                      <span class="textdisable">Call</span>
+                    </td>
+                    <td colspan="2">
+                      <input name="style" type="radio" id="RadioOT_2_amer_MC" value="put" checked="" autocomplete="off">
+                      <span>Put</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <button class="btn_reset floatleft marginright10" href="javascript:void(0)" title="Reset" id="reset_amer_MC">Reset</button>
+                      <button class="btn_calculate floatleft" href="javascript:void(0)" title="Calculate" id="calculate_amer_MC">Calculate</button>
+                    </td>
+                    <td>
+                      <div id="result_amer_MC">
+                        <a class="btn_loaddefaultdata floatleft">Result: 
+                          <output type="text" name="result_amer_MC_val" id="result_amer_MC_val" style="width: 150px">
+                        </output>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="4">
+                      <span class="ari_grey11 margintop5"><em>Please Note<br>
+                        For loading the values, please follow the format provided next to the input boxes (e.g., interest rate = 5% and not 0.05). There is check for invalid input format. However, there is no check for input domain.<br> 
+                        Monte Carlo implementation for barrier options can take a minute for simulations around 100,000.<br>
+                        Implied Volatity cannot be calculated for all options. Therefore, it is normal to have NAN in the result.</em>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div id="tabs-3">
+          <div class="scrollbar">
+            <div class="calculatorcontent margintop10 cal_SO">
+              <table border="0" cellpadding="5" cellspacing="0" style="margin: 0px 0 10px 0; max-width: 715px;">
+                <tbody>
+                  <tr>
+                    <td width="28%">
+                      Pricing Model
+                    </td>
+                    <td colspan="4">
+                      <select name="select" id="select_pricingmodel_asia" style="max-width: 500px; min-width: 300px" autocomplete="off">
+                        <option selected="selected" value="Geometric-ClosedForm">Geometric (Closed Form)</option><option value="Arithmetic-MonteCarlo">Arithmetic (Monte Carlo)</option>
+                      </select>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table id="table_asia_CF" border="0" class="cal_searchtable" style="max-width: 960px;">
+                <tbody>
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Stock Price</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="underlying" id="underlying_asia_CF" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Strike Price</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="strike" id="strike_asia_CF" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Interest rate</span><span class="floatright"> % </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="interest_rate" id="interest_rate_asia_CF" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Number of Observations</span><span class="floatright"></span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="number_observations" id="number_observations_asia_CF" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Time</span><span class="floatright"> yrs </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="time" id="time_asia_CF" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Volatility</span><span class="floatright"> % </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="volatility" id="volatility_asia_CF" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Option Type
+                    </td>
+                    <td>
+                      <input type="radio" name="style" id="RadioOT_1_asia_CF" value="call" checked="" autocomplete="off">
+                      <span class="textdisable">Call</span>
+                    </td>
+                    <td colspan="2">
+                      <input type="radio" name="style" id="RadioOT_2_asia_CF" value="put" checked="" autocomplete="off">
+                      <span>Put</span>
+                    </td>
+                  </tr>
+                  <tr>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <button class="btn_reset floatleft marginright10" href="javascript:void(0)" title="Reset" id="reset_asia_CF">Reset</button>
+                      <button class="btn_calculate floatleft" href="javascript:void(0)" title="Calculate" id="calculate_asia_CF">Calculate</button>
+                    </td>
+                    <td>
+                      <div id="result_asia_CF">
+                        <a class="btn_loaddefaultdata floatleft">Result: 
+                          <output type="text" name="result_asia_CF_val" id="result_asia_CF_val" style="width: 150px">
+                        </output>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="4">
+                      <span class="ari_grey11 margintop5"><em>Please Note<br>
+                        For loading the values, please follow the format provided next to the input boxes (e.g., interest rate = 5% and not 0.05). There is check for invalid input format. However, there is no check for input domain.<br> 
+                        Monte Carlo implementation for barrier options can take a minute for simulations around 100,000.<br>
+                        Implied Volatity cannot be calculated for all options. Therefore, it is normal to have NAN in the result.</em>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table id="table_asia_MC" border="0" class="cal_searchtable" style="max-width: 960px;">
+                <tbody>
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Stock Price</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="underlying" id="underlying_asia_MC" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Strike Price</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="strike" id="strike_asia_MC" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Interest rate</span><span class="floatright"> % </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="interest_rate" id="interest_rate_asia_MC" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Number of Observations</span><span class="floatright"></span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="number_observations" id="number_observations_asia_MC" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Time</span><span class="floatright"> yrs </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="time" id="time_asia_MC" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Volatility</span><span class="floatright"> % </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="volatility" id="volatility_asia_MC" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Number of Paths</span><span class="floatright"></span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="number_paths" id="number_paths_asia_MC" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Control Variate
+                    </td>
+                    <td>
+                      <input type="radio" name="style1" id="RadioCV_1_asia_MC" value="yes" checked="" autocomplete="off">
+                      <span class="textdisable">Yes</span>
+                    </td>
+                    <td colspan="2">
+                      <input name="style1" type="radio" id="RadioCV_0_asia_MC" value="no" checked="" autocomplete="off">
+                      <span>No</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Option Type
+                    </td>
+                    <td>
+                      <input type="radio" name="style" id="RadioOT_1_asia_MC" value="call" checked="" autocomplete="off">
+                      <span class="textdisable">Call</span>
+                    </td>
+                    <td colspan="2">
+                      <input name="style" type="radio" id="RadioOT_2_asia_MC" value="put" checked="" autocomplete="off">
+                      <span>Put</span>
+                    </td>
+                  </tr>
+                  <tr>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <button class="btn_reset floatleft marginright10" href="javascript:void(0)" title="Reset" id="reset_asia_MC">Reset</button>
+                      <button class="btn_calculate floatleft" href="javascript:void(0)" title="Calculate" id="calculate_asia_MC">Calculate</button>
+                    </td>
+                    <td>
+                      <div id="result_asia_MC">
+                        <a class="btn_loaddefaultdata floatleft">Result: 
+                          <output type="text" name="result_asia_MC_val" id="result_asia_MC_val" style="width: 150px">
+                        </output>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="4">
+                      <span class="ari_grey11 margintop5"><em>Please Note<br>
+                        For loading the values, please follow the format provided next to the input boxes (e.g., interest rate = 5% and not 0.05). There is check for invalid input format. However, there is no check for input domain.<br> 
+                        Monte Carlo implementation for barrier options can take a minute for simulations around 100,000.<br>
+                        Implied Volatity cannot be calculated for all options. Therefore, it is normal to have NAN in the result.</em>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div id="tabs-4">
+          <div class="scrollbar">
+            <div class="calculatorcontent margintop10 cal_SO">
+              <table border="0" cellpadding="5" cellspacing="0" style="margin: 0px 0 10px 0; max-width: 715px;">
+                  <tbody>
+                    <tr>
+                      <td width="28%">
+                        Pricing Model
+                      </td>
+                      <td colspan="4">
+                        <select name="select" id="select_pricingmodel_bkt" style="max-width: 500px; min-width: 300px" autocomplete="off">
+                          <option selected="selected" value="Geometric-ClosedForm">Geometric (Closed Form)</option><option value="Arithmetic-MonteCarlo">Arithmetic (Monte Carlo)</option>
+                        </select>
+                      </td>
+                    </tr>
+                  </tbody>
+              </table>
+              <table id="table_bkt_CF" border="0" class="cal_searchtable" style="max-width: 960px;">
+                <tbody>
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Stock Price 1</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="underlying1" id="underlying1_bkt_CF" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Stock Price 2</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="underlying2" id="underlying2_bkt_CF" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Volatility 1</span><span class="floatright"> % </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="volatility1" id="volatility1_bkt_CF" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Volatility 2</span><span class="floatright"> % </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="volatility2" id="volatility2_bkt_CF" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Strike</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="strike" id="strike_bkt_CF" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">&rho;</span><span class="floatright">  </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="coefficient" id="coefficient_bkt_CF" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Interest Rate</span><span class="floatright"> % </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="interest_rate" id="interest_rate_bkt_CF" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Time</span><span class="floatright"> yrs </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="time" id="time_bkt_CF" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      Option Type
+                    </td>
+                    <td>
+                      <input type="radio" name="style" id="RadioOT_1_bkt_CF" value="call" checked="" autocomplete="off">
+                      <span class="textdisable">Call</span>
+                    </td>
+                    <td colspan="2">
+                      <input name="style" type="radio" id="RadioOT_2_bkt_CF" value="put" checked="" autocomplete="off">
+                      <span>Put</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <button class="btn_reset floatleft marginright10" href="javascript:void(0)" title="Reset" id="reset_bkt_CF">Reset</button>
+                      <button class="btn_calculate floatleft" href="javascript:void(0)" title="Calculate" id="calculate_bkt_CF">Calculate</button>
+                    </td>
+                    <td>
+                      <div id="result_bkt_CF">
+                        <a class="btn_loaddefaultdata floatleft">Result: 
+                          <output type="text" name="result_bkt_CF_val" id="result_bkt_CF_val" style="width: 150px">
+                        </output>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="4">
+                      <span class="ari_grey11 margintop5"><em>Please Note<br>
+                        For loading the values, please follow the format provided next to the input boxes (e.g., interest rate = 5% and not 0.05). There is check for invalid input format. However, there is no check for input domain.<br> 
+                        Monte Carlo implementation for barrier options can take a minute for simulations around 100,000.<br>
+                        Implied Volatity cannot be calculated for all options. Therefore, it is normal to have NAN in the result.</em>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table id="table_bkt_MC" border="0" class="cal_searchtable" style="max-width: 960px;">
+                <tbody>
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Stock Price 1</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="underlying1" id="underlying1_bkt_MC" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Stock Price 2</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="underlying2" id="underlying2_bkt_MC" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Volatility 1</span><span class="floatright"> % </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="volatility1" id="volatility1_bkt_MC" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Volatility 2</span><span class="floatright"> % </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="volatility2" id="volatility2_bkt_MC" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Strike</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="strike" id="strike_bkt_MC" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">&rho;</span><span class="floatright">  </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="coefficient" id="coefficient_bkt_MC" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Interest Rate</span><span class="floatright"> % </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="interest_rate" id="interest_rate_bkt_MC" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Time</span><span class="floatright"> yrs </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="time" id="time_bkt_MC" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Number of Observation</span><span class="floatright">  </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="number_observations" id="number_observations_bkt_MC" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      Control Variate
+                    </td>
+                    <td>
+                      <input type="radio" name="style1" id="RadioCV_1_bkt_MC" value="yes" checked="" autocomplete="off">
+                      <span class="textdisable">Yes</span>
+                    </td>
+                    <td colspan="2">
+                      <input name="style1" type="radio" id="RadioCV_0_bkt_MC" value="no" checked="" autocomplete="off">
+                      <span>No</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Option Type
+                    </td>
+                    <td>
+                      <input type="radio" name="style" id="RadioOT_1_bkt_MC" value="call" checked="" autocomplete="off">
+                      <span class="textdisable">Call</span>
+                    </td>
+                    <td colspan="2">
+                      <input name="style" type="radio" id="RadioOT_2_bkt_MC" value="put" checked="" autocomplete="off">
+                      <span>Put</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <button class="btn_reset floatleft marginright10" href="javascript:void(0)" title="Reset" id="reset_bkt_MC">Reset</button>
+                      <button class="btn_calculate floatleft" href="javascript:void(0)" title="Calculate" id="calculate_bkt_MC">Calculate</button>
+                    </td>
+                    <td>
+                      <div id="result_bkt_MC">
+                        <a class="btn_loaddefaultdata floatleft">Result: 
+                          <output type="text" name="result_bkt_MC_val" id="result_bkt_MC_val" style="width: 150px">
+                        </output>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="4">
+                      <span class="ari_grey11 margintop5"><em>Please Note<br>
+                        For loading the values, please follow the format provided next to the input boxes (e.g., interest rate = 5% and not 0.05). There is check for invalid input format. However, there is no check for input domain.<br> 
+                        Monte Carlo implementation for barrier options can take a minute for simulations around 100,000.<br>
+                        Implied Volatity cannot be calculated for all options. Therefore, it is normal to have NAN in the result.</em>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>  
+          </div>
+        </div>
+        <div id="tabs-5">
+          <div class="scrollbar">
+            <div class="calculatorcontent margintop10 cal_SO">
+              <table border="0" cellpadding="5" cellspacing="0" style="margin: 0px 0 10px 0; max-width: 715px;">
+              </table>
+              <table id="table_ImpVol" border="0" class="cal_searchtable" style="max-width: 960px;">
+                <tbody>
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Stock Price</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="underlying" id="underlying_ImpVol" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Strike Price</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="strike" id="strike_ImpVol" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Interest rate</span><span class="floatright"> % </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="interest_rate" id="interest_rate_ImpVol" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Repo rate</span><span class="floatright"> % </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="repo_rate" id="repo_rate_ImpVol" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Time</span><span class="floatright"> yrs </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="time" id="time_ImpVol" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Option Premium</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="volatility" id="premium_ImpVol" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      Option Type
+                    </td>
+                    <td>
+                      <input type="radio" name="style" id="RadioOT_1_ImpVol" value="call" checked="" autocomplete="off">
+                      <span class="textdisable">Call</span>
+                    </td>
+                    <td colspan="2">
+                      <input name="style" type="radio" id="RadioOT_2_ImpVol" value="put" checked="" autocomplete="off">
+                      <span>Put</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <button class="btn_reset floatleft marginright10" href="javascript:void(0)" title="Reset" id="reset_ImpVol">Reset</button>
+                      <button class="btn_calculate floatleft" href="javascript:void(0)" title="Calculate" id="calculate_ImpVol">Calculate</button>
+                    </td>
+                    <td>
+                      <div id="result_ImpVol">
+                        <a class="btn_loaddefaultdata floatleft">Result: 
+                          <output type="text" name="result_ImpVol_val" id="result_ImpVol_val" style="width: 150px">
+                        </output>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="4">
+                      <span class="ari_grey11 margintop5"><em>Please Note<br>
+                        For loading the values, please follow the format provided next to the input boxes (e.g., interest rate = 5% and not 0.05). There is check for invalid input format. However, there is no check for input domain.<br> 
+                        Monte Carlo implementation for barrier options can take a minute for simulations around 100,000.<br>
+                        Implied Volatity cannot be calculated for all options. Therefore, it is normal to have NAN in the result.</em>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>  
+          </div>
+        </div>
+        <div id="tabs-6">
+          <div class="scrollbar">
+            <div class="calculatorcontent margintop10 cal_SO">
+              <table border="0" cellpadding="5" cellspacing="0" style="margin: 0px 0 10px 0; max-width: 715px;">
+                  <tbody>
+                    <tr>
+                      <td width="28%">
+                        Pricing Model
+                      </td>
+                      <td colspan="4">
+                        <select name="select" id="select_pricingmodel_bar" style="max-width: 500px; min-width: 300px" autocomplete="off">
+                          <option selected="selected" value="Black-Scholes">Knock In</option><option value="Monte Carlo">Knock Out</option>
+                        </select>
+                      </td>
+                    </tr>
+                  </tbody>
+              </table>
+              <table id="table_bar_KI" border="0" class="cal_searchtable" style="max-width: 960px;">
+                <tbody>
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Stock Price</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="underlying" id="underlying_bar_KI" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Strike Price</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="strike" id="strike_bar_KI" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Interest rate</span><span class="floatright"> % </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="interest_rate" id="interest_rate_bar_KI" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Barrier</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="barrier" id="barrier_bar_KI" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Time</span><span class="floatright"> yrs </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="time" id="time_bar_KI" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Volatility</span><span class="floatright"> % </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="volatility" id="volatility_bar_KI" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Number of Paths</span><span class="floatright"> </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="number_paths" id="number_paths_bar_KI" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Number of Observations</span><span class="floatright">  </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="number_observations" id="number_observations_bar_KI" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      Barrier Type
+                    </td>
+                    <td>
+                      <input type="radio" name="style1" id="RadioBT_1_bar_KI" value="up" checked="" autocomplete="off">
+                      <span class="textdisable">Up</span>
+                    </td>
+                    <td colspan="2">
+                      <input name="style1" type="radio" id="RadioBT_2_bar_KI" value="down" checked="" autocomplete="off">
+                      <span>Down</span>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      Option Type
+                    </td>
+                    <td>
+                      <input type="radio" name="style" id="RadioOT_1_bar_KI" value="call" checked="" autocomplete="off">
+                      <span class="textdisable">Call</span>
+                    </td>
+                    <td colspan="2">
+                      <input name="style" type="radio" id="RadioOT_2_bar_KI" value="put" checked="" autocomplete="off">
+                      <span>Put</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <button class="btn_reset floatleft marginright10" href="javascript:void(0)" title="Reset" id="reset_bar_KI">Reset</button>
+                      <button class="btn_calculate floatleft" href="javascript:void(0)" title="Calculate" id="calculate_bar_KI">Calculate</button>
+                    </td>
+                    <td>
+                      <div id="result_bar_KI">
+                        <a class="btn_loaddefaultdata floatleft">Result: 
+                          <output type="text" name="result_bar_KI_val" id="result_bar_KI_val" style="width: 150px">
+                        </output>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="4">
+                      <span class="ari_grey11 margintop5"><em>Please Note<br>
+                        For loading the values, please follow the format provided next to the input boxes (e.g., interest rate = 5% and not 0.05). There is check for invalid input format. However, there is no check for input domain.<br> 
+                        Monte Carlo implementation for barrier options can take a minute for simulations around 100,000.<br>
+                        Implied Volatity cannot be calculated for all options. Therefore, it is normal to have NAN in the result.</em>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table id="table_bar_KO" border="0" class="cal_searchtable" style="max-width: 960px;">
+                <tbody>
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Stock Price</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="underlying" id="underlying_bar_KO" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Strike Price</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="strike" id="strike_bar_KO" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Interest rate</span><span class="floatright"> % </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="interest_rate" id="interest_rate_bar_KO" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Barrier</span><span class="floatright"> $ </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="barrier" id="barrier_bar_KO" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Time</span><span class="floatright"> yrs </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="time" id="time_bar_KO" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Volatility</span><span class="floatright"> % </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="volatility" id="volatility_bar_KO" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td width="24.1%">
+                      <span class="floatleft">Number of Paths</span><span class="floatright"> </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="number_paths" id="number_paths_bar_KO" style="width: 150px" autocomplete="off">
+                    </td>
+                    <td width="24.1%">
+                      <span class="floatleft">Number of Observations</span><span class="floatright">  </span>
+                    </td>
+                    <td width="23.7%">
+                      <input type="text" name="number_observations" id="number_observations_bar_KO" style="width: 150px" autocomplete="off">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      Barrier Type
+                    </td>
+                    <td>
+                      <input type="radio" name="style1" id="RadioBT_1_bar_KO" value="up" checked="" autocomplete="off">
+                      <span class="textdisable">Up</span>
+                    </td>
+                    <td colspan="2">
+                      <input name="style1" type="radio" id="RadioBT_2_bar_KO" value="down" checked="" autocomplete="off">
+                      <span>Down</span>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      Option Type
+                    </td>
+                    <td>
+                      <input type="radio" name="style" id="RadioOT_1_bar_KO" value="call" checked="" autocomplete="off">
+                      <span class="textdisable">Call</span>
+                    </td>
+                    <td colspan="2">
+                      <input name="style" type="radio" id="RadioOT_2_bar_KO" value="put" checked="" autocomplete="off">
+                      <span>Put</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <button class="btn_reset floatleft marginright10" href="javascript:void(0)" title="Reset" id="reset_bar_KO">Reset</button>
+                      <button class="btn_calculate floatleft" href="javascript:void(0)" title="Calculate" id="calculate_bar_KO">Calculate</button>
+                    </td>
+                    <td>
+                      <div id="result_bar_KO">
+                        <a class="btn_loaddefaultdata floatleft">Result: 
+                          <output type="text" name="result_bar_KO_val" id="result_bar_KO_val" style="width: 150px">
+                        </output>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="4">
+                      <span class="ari_grey11 margintop5"><em>Please Note<br>
+                        For loading the values, please follow the format provided next to the input boxes (e.g., interest rate = 5% and not 0.05). There is check for invalid input format. However, there is no check for input domain.<br> 
+                        Monte Carlo implementation for barrier options can take a minute for simulations around 100,000.<br>
+                        Implied Volatity cannot be calculated for all options. Therefore, it is normal to have NAN in the result.</em>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>  
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <br><br><br><br>
+  <footer>
+    <div class="footer-content">
+      <p class="credit">&copy; Copyright 2019 Mishty Negi<br>
+        Mini Option Pricer designed and developed for educational and research purposes only</p>
+        <ul class="social">
+          <li><a href="https://github.com/mishtynegi" target="_blank">Github</a></li>
+        </ul>
+    </div>
+  </footer>
+
+<script>
+  $(document).ready(function(){
+    $("#tabs").on("tabsactivate", function( event, ui ) {
+          $("#result_eur_BS").hide();
+          $("#result_eur_MC").hide();
+          $("#result_amer_BN").hide();
+          $("#result_amer_MC").hide();
+          $("#result_asia_CF").hide();
+          $("#result_asia_MC").hide();
+          $("#result_bkt_CF").hide();
+          $("#result_bkt_MC").hide();
+          $("#result_ImpVol").hide();
+          $("#result_bar_KI").hide();
+          $("#result_bar_KO").hide();
+    });
+
+  //unhides first option content
+    $("#table_eur_BS").show();
+    $("#table_eur_MC").hide();
+    $("#result_eur_BS").hide();
+    $("#result_eur_MC").hide();
+
+    $("#table_amer_BN").show();
+    $("#table_amer_MC").hide();
+    $("#result_amer_BN").hide();
+    $("#result_amer_MC").hide();
+
+    $("#table_asia_CF").show();
+    $("#table_asia_MC").hide();
+    $("#result_asia_CF").hide();
+    $("#result_asia_MC").hide();
+    
+    $("#table_bkt_CF").show();
+    $("#table_bkt_MC").hide();
+    $("#result_bkt_CF").hide();
+    $("#result_bkt_MC").hide();
+
+    $("#result_ImpVol").hide();
+
+    $("#table_bar_KI").show();
+    $("#table_bar_KO").hide();
+    $("#result_bar_KI").hide();
+    $("#result_bar_KO").hide();
+
+  //listen to dropdown for change
+    $("#select_pricingmodel_eur").change(function(){
+    //rehide content on change
+      $("#table_eur_BS").toggle();
+      $("#table_eur_MC").toggle();
+      $("#result_eur_BS").hide();
+      $("#result_eur_MC").hide();
+    });
+
+      //listen to dropdown for change
+    $("#select_pricingmodel_amer").change(function(){
+    //rehide content on change
+      $("#table_amer_BN").toggle();
+      $("#table_amer_MC").toggle();
+      $("#result_amer_BN").hide();
+      $("#result_amer_MC").hide();
+    });
+
+      //listen to dropdown for change
+    $("#select_pricingmodel_asia").change(function(){
+    //rehide content on change
+      $("#table_asia_CF").toggle();
+      $("#table_asia_MC").toggle();
+      $("#result_asia_CF").hide();
+      $("#result_asia_MC").hide();
+    });
+
+      //listen to dropdown for change
+    $("#select_pricingmodel_bkt").change(function(){
+    //rehide content on change
+      $("#table_bkt_CF").toggle();
+      $("#table_bkt_MC").toggle();
+      $("#result_bkt_CF").hide();
+      $("#result_bkt_MC").hide();
+    });
+
+      //listen to dropdown for change
+    $("#select_pricingmodel_bar").change(function(){
+    //rehide content on change
+      $("#table_bar_KI").toggle();
+      $("#table_bar_KO").toggle();
+      $("#result_bar_KI").hide();
+      $("#result_bar_KO").hide();
+    });
+
+    $("#reset_eur_BS").click(function() {
+      $("#interest_rate_eur_BS").val("");
+      $("#underlying_eur_BS").val("");
+      $("#volatility_eur_BS").val("");
+      $("#repo_rate_eur_BS").val("");
+      $("#strike_eur_BS").val("");
+      $("#time_eur_BS").val("");
+      $("#RadioOT_1_eur_BS").prop( "checked", false );
+      $("#RadioOT_2_eur_BS").prop( "checked", false );
+    });
+
+    $("#calculate_eur_BS").click(function(){
+      var interestRate = $("#interest_rate_eur_BS").val();
+      var stockPrice = $("#underlying_eur_BS").val();
+      var volatility = $("#volatility_eur_BS").val();
+      var repoRate = $("#repo_rate_eur_BS").val();
+      var strike = $("#strike_eur_BS").val();
+      var time = $("#time_eur_BS").val();
+      var optionType = ($("#RadioOT_1_eur_BS").is(':checked')) ? "call" : "put";
+
+      $.post({
+        url: "http://localhost:8080/blackScholes",
+        dataType : 'text',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          "interestRate" : interestRate,
+          "stockPrice" : stockPrice,
+          "strike" : strike,
+          "volatility" : volatility,
+          "time" : time,
+          "repoRate" : repoRate,
+          "optionType" : optionType,
+        }),
+        success: function(data) {
+          $("#result_eur_BS_val").text(data);
+          $("#result_eur_BS").show();
+        },
+        error: function(jqXHR, exception) {
+            console.log(jqXHR);
+            alert("Error ! Please check if input is correct.");
+
+        }
+      })
+    });
+
+    $("#reset_eur_MC").click(function() {
+      $("#interest_rate_eur_MC").val("");
+      $("#underlying_eur_MC").val("");
+      $("#volatility_eur_MC").val("");
+      $("#number_steps_eur_MC").val("");
+      $("#strike_eur_MC").val("");
+      $("#time_eur_MC").val("");
+      $("#RadioOT_1_eur_MC").prop( "checked", false );
+      $("#RadioOT_2_eur_MC").prop( "checked", false );
+    });
+
+    $("#calculate_eur_MC").click(function(){
+      var interestRate = $("#interest_rate_eur_MC").val();
+      var stockPrice = $("#underlying_eur_MC").val();
+      var volatility = $("#volatility_eur_MC").val();
+      var numOfSteps = $("#number_steps_eur_MC").val();
+      var strike = $("#strike_eur_MC").val();
+      var time = $("#time_eur_MC").val();
+      var optionType = ($("#RadioOT_1_eur_MC").is(':checked')) ? "call" : "put";
+
+      $.post({
+        url: "http://localhost:8080/europeanOptionMC",
+        dataType : 'text',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          "interestRate" : interestRate,
+          "stockPrice" : stockPrice,
+          "strike" : strike,
+          "volatility" : volatility,
+          "time" : time,
+          "numOfSteps" : numOfSteps,
+          "optionType" : optionType,
+        }),
+        success: function(data) {
+          $("#result_eur_MC_val").text(data);
+          $("#result_eur_MC").show();
+        },
+        error: function(jqXHR, exception) {
+            console.log(jqXHR);
+            alert("Error ! Please check if input is correct.");
+
+        }
+      })
+    });
+
+    $("#reset_amer_BN").click(function() {
+      $("#interest_rate_amer_BN").val("");
+      $("#underlying_amer_BN").val("");
+      $("#volatility_amer_BN").val("");
+      $("#number_steps_amer_BN").val("");
+      $("#strike_amer_BN").val("");
+      $("#time_amer_BN").val("");
+      $("#RadioOT_1_amer_BN").prop( "checked", false );
+      $("#RadioOT_2_amer_BN").prop( "checked", false );
+    });
+
+    $("#calculate_amer_BN").click(function(){
+      var interestRate = $("#interest_rate_amer_BN").val();
+      var stockPrice = $("#underlying_amer_BN").val();
+      var volatility = $("#volatility_amer_BN").val();
+      var numOfSteps = $("#number_steps_amer_BN").val();
+      var strike = $("#strike_amer_BN").val();
+      var time = $("#time_amer_BN").val();
+      var optionType = ($("#RadioOT_1_amer_BN").is(':checked')) ? "call" : "put";
+
+      $.post({
+        url: "http://localhost:8080/americanOptionBN",
+        dataType : 'text',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          "interestRate" : interestRate,
+          "stockPrice" : stockPrice,
+          "strike" : strike,
+          "volatility" : volatility,
+          "time" : time,
+          "numOfSteps" : numOfSteps,
+          "optionType" : optionType,
+        }),
+        success: function(data) {
+          $("#result_amer_BN_val").text(data);
+          $("#result_amer_BN").show();
+        },
+        error: function(jqXHR, exception) {
+            console.log(jqXHR);
+            alert("Error ! Please check if input is correct.");
+
+        }
+      })
+
+    });
+
+    $("#reset_amer_MC").click(function() {
+      $("#interest_rate_amer_MC").val("");
+      $("#underlying_amer_MC").val("");
+      $("#volatility_amer_MC").val("");
+      $("#number_steps_amer_MC").val("");
+      $("#number_paths_amer_MC").val("");
+      $("#strike_amer_MC").val("");
+      $("#time_amer_MC").val("");
+      $("#RadioOT_1_amer_MC").prop( "checked", false );
+      $("#RadioOT_2_amer_MC").prop( "checked", false );
+    });
+
+    $("#calculate_amer_MC").click(function(){
+      var interestRate = $("#interest_rate_amer_MC").val();
+      var stockPrice = $("#underlying_amer_MC").val();
+      var volatility = $("#volatility_amer_MC").val();
+      var numOfSteps = $("#number_steps_amer_MC").val();
+      var numOfPaths = $("#number_paths_amer_MC").val();
+      var strike = $("#strike_amer_MC").val();
+      var time = $("#time_amer_MC").val();
+      var optionType = ($("#RadioOT_1_amer_MC").is(':checked')) ? "call" : "put";
+
+      $.post({
+        url: "http://localhost:8080/americanOptionMC",
+        dataType : 'text',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          "interestRate" : interestRate,
+          "stockPrice" : stockPrice,
+          "strike" : strike,
+          "volatility" : volatility,
+          "time" : time,
+          "numOfSteps" : numOfSteps,
+          "numOfPaths" : numOfPaths,
+          "optionType" : optionType,
+        }),
+        success: function(data) {
+          $("#result_amer_MC_val").text(data);
+          $("#result_amer_MC").show();
+        },
+        error: function(jqXHR, exception) {
+            console.log(jqXHR);
+            alert("Error ! Please check if input is correct.");
+
+        }
+      })
+
+    });
+
+    $("#reset_asia_CF").click(function() {
+      $("#interest_rate_asia_CF").val("");
+      $("#underlying_asia_CF").val("");
+      $("#volatility_asia_CF").val("");
+      $("#number_observations_asia_CF").val("");
+      $("#strike_asia_CF").val("");
+      $("#time_asia_CF").val("");
+      $("#RadioOT_1_asia_CF").prop( "checked", false );
+      $("#RadioOT_2_asia_CF").prop( "checked", false );
+    });
+
+    $("#calculate_asia_CF").click(function(){
+      var interestRate = $("#interest_rate_asia_CF").val();
+      var stockPrice = $("#underlying_asia_CF").val();
+      var volatility = $("#volatility_asia_CF").val();
+      var numOfObs = $("#number_observations_asia_CF").val();
+      var strike = $("#strike_asia_CF").val();
+      var time = $("#time_asia_CF").val();
+      var optionType = ($("#RadioOT_1_asia_CF").is(':checked')) ? "call" : "put";
+
+      $.post({
+        url: "http://localhost:8080/asianOptionCF",
+        dataType : 'text',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          "interestRate" : interestRate,
+          "stockPrice" : stockPrice,
+          "strike" : strike,
+          "volatility" : volatility,
+          "time" : time,
+          "numOfObs" : numOfObs,
+          "optionType" : optionType,
+        }),
+        success: function(data) {
+          $("#result_asia_CF_val").text(data);
+          $("#result_asia_CF").show();
+        },
+        error: function(jqXHR, exception) {
+            console.log(jqXHR);
+            alert("Error ! Please check if input is correct.");
+
+        }
+      })
+    });
+
+   $("#reset_asia_MC").click(function() {
+      $("#interest_rate_asia_MC").val("");
+      $("#underlying_asia_MC").val("");
+      $("#volatility_asia_MC").val("");
+      $("#number_observations_asia_MC").val("");
+      $("#number_paths_asia_MC").val("");
+      $("#strike_asia_MC").val("");
+      $("#time_asia_MC").val("");
+      $("#RadioOT_2_asia_MC").prop( "checked", false );
+      $("#RadioCV_1_asia_MC").prop( "checked", false );
+      $("#RadioCV_0_asia_MC").prop( "checked", false );
+      $("#RadioOT_1_asia_MC").prop( "checked", false );
+    });
+
+  $("#calculate_asia_MC").click(function(){
+    var interestRate = $("#interest_rate_asia_MC").val();
+    var stockPrice = $("#underlying_asia_MC").val();
+    var volatility = $("#volatility_asia_MC").val();
+    var numOfObs = $("#number_observations_asia_MC").val();
+    var numOfPaths = $("#number_paths_asia_MC").val();
+    var strike = $("#strike_asia_MC").val();
+    var time = $("#time_asia_MC").val();
+    var optionType = ($("#RadioOT_1_asia_MC").is(':checked')) ? "call" : "put";
+    var controlVariate = ($("#RadioCV_1_asia_MC").is(':checked')) ? "yes" : "no";
+
+    $.post({
+      url: "http://localhost:8080/asianOptionMC",
+      dataType : 'text',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        "interestRate" : interestRate,
+        "stockPrice" : stockPrice,
+        "strike" : strike,
+        "volatility" : volatility,
+        "time" : time,
+        "numOfObs" : numOfObs,
+        "numOfPaths" : numOfPaths,
+        "optionType" : optionType,
+        "controlVariate" : controlVariate,
+      }),
+      success: function(data) {
+        $("#result_asia_MC_val").text(data);
+        $("#result_asia_MC").show();
+      },
+      error: function(jqXHR, exception) {
+        console.log(jqXHR);
+        alert("Error ! Please check if input is correct.");
+
+      }
+    })
+  });
+
+    $("#reset_bkt_CF").click(function() {
+      $("#interest_rate_bkt_CF").val("");
+      $("#underlying1_bkt_CF").val("");
+      $("#underlying2_bkt_CF").val("");
+      $("#volatility1_bkt_CF").val("");
+      $("#volatility2_bkt_CF").val("");
+      $("#coefficient_bkt_CF").val("");
+      $("#strike_bkt_CF").val("");
+      $("#time_bkt_CF").val("");
+      $("#RadioOT_1_bkt_CF").prop( "checked", false );
+      $("#RadioOT_2_bkt_CF").prop( "checked", false );
+    });
+
+    $("#calculate_bkt_CF").click(function(){
+      var interestRate = $("#interest_rate_bkt_CF").val();
+      var stockPrice1 = $("#underlying1_bkt_CF").val();
+      var stockPrice2 = $("#underlying2_bkt_CF").val();
+      var volatility1 = $("#volatility1_bkt_CF").val();
+      var volatility2 = $("#volatility2_bkt_CF").val();
+      var coefficient = $("#coefficient_bkt_CF").val();
+      var strike = $("#strike_bkt_CF").val();
+      var time = $("#time_bkt_CF").val();
+      var optionType = ($("#RadioOT_1_bkt_CF").is(':checked')) ? "call" : "put";
+
+      $.post({
+        url: "http://localhost:8080/basketOptionCF",
+        dataType : 'text',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          "interestRate" : interestRate,
+          "stockPrice1" : stockPrice1,
+          "stockPrice2" : stockPrice2,
+          "strike" : strike,
+          "volatility1" : volatility1,
+          "volatility2" : volatility2,
+          "time" : time,
+          "coefficient" : coefficient,
+          "optionType" : optionType,
+        }),
+        success: function(data) {
+          $("#result_bkt_CF_val").text(data);
+          $("#result_bkt_CF").show();
+        },
+        error: function(jqXHR, exception) {
+            console.log(jqXHR);
+            alert("Error ! Please check if input is correct.");
+
+        }
+      })
+    });
+
+    $("#reset_bkt_MC").click(function() {
+      $("#interest_rate_bkt_MC").val("");
+      $("#underlying1_bkt_MC").val("");
+      $("#underlying2_bkt_MC").val("");
+      $("#volatility1_bkt_MC").val("");
+      $("#volatility2_bkt_MC").val("");
+      $("#coefficient_bkt_MC").val("");
+      $("#strike_bkt_MC").val("");
+      $("#time_bkt_MC").val("");
+      $("#number_observations_bkt_MC").val("");
+      $("#RadioOT_1_bkt_MC").prop( "checked", false );
+      $("#RadioOT_2_bkt_MC").prop( "checked", false );
+      $("#RadioCV_0_bkt_MC").prop( "checked", false );
+      $("#RadioCV_1_bkt_MC").prop( "checked", false );
+    });
+
+    $("#calculate_bkt_MC").click(function(){
+      var interestRate = $("#interest_rate_bkt_MC").val();
+      var stockPrice1 = $("#underlying1_bkt_MC").val();
+      var stockPrice2 = $("#underlying2_bkt_MC").val();
+      var volatility1 = $("#volatility1_bkt_MC").val();
+      var volatility2 = $("#volatility2_bkt_MC").val();
+      var coefficient = $("#coefficient_bkt_MC").val();
+      var numOfObs = $("#number_observations_bkt_MC").val();
+      var strike = $("#strike_bkt_MC").val();
+      var time = $("#time_bkt_MC").val();
+      var optionType = ($("#RadioOT_1_bkt_MC").is(':checked')) ? "call" : "put";
+      var controlVariate = ($("#RadioCV_1_bkt_MC").is(':checked')) ? "yes" : "no";
+
+      $.post({
+        url: "http://localhost:8080/basketOptionMC",
+        dataType : 'text',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          "interestRate" : interestRate,
+          "stockPrice1" : stockPrice1,
+          "stockPrice2" : stockPrice2,
+          "strike" : strike,
+          "volatility1" : volatility1,
+          "volatility2" : volatility2,
+          "time" : time,
+          "coefficient" : coefficient,
+          "numOfObs" : numOfObs,
+          "optionType" : optionType,
+          "controlVariate" : controlVariate,
+        }),
+        success: function(data) {
+          $("#result_bkt_MC_val").text(data);
+          $("#result_bkt_MC").show();
+        },
+        error: function(jqXHR, exception) {
+            console.log(jqXHR);
+            alert("Error ! Please check if input is correct.");
+
+        }
+      })
+    });
+
+    $("#reset_ImpVol").click(function() {
+      $("#interest_rate_ImpVol").val("");
+      $("#underlying_ImpVol").val("");
+      $("#premium_ImpVol").val("");
+      $("#repo_rate_ImpVol").val("");
+      $("#strike_ImpVol").val("");
+      $("#time_ImpVol").val("");
+      $("#RadioOT_1_ImpVol").prop( "checked", false );
+      $("#RadioOT_2_ImpVol").prop( "checked", false );
+    });
+
+    $("#calculate_ImpVol").click(function(){
+      var interestRate = $("#interest_rate_ImpVol").val();
+      var stockPrice = $("#underlying_ImpVol").val();
+      var premium = $("#premium_ImpVol").val();
+      var repoRate = $("#repo_rate_ImpVol").val();
+      var strike = $("#strike_ImpVol").val();
+      var time = $("#time_ImpVol").val();
+      var optionType = ($("#RadioOT_1_ImpVol").is(':checked')) ? "call" : "put";
+
+      $.post({
+        url: "http://localhost:8080/impliedVolatility",
+        dataType : 'text',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          "interestRate" : interestRate,
+          "stockPrice" : stockPrice,
+          "strike" : strike,
+          "premium" : premium,
+          "time" : time,
+          "repoRate" : repoRate,
+          "optionType" : optionType,
+        }),
+        success: function(data) {
+          $("#result_ImpVol_val").text(data);
+          $("#result_ImpVol").show();
+        },
+        error: function(jqXHR, exception) {
+            console.log(jqXHR);
+            alert("Error ! Please check if input is correct.");
+        }
+      })
+    });
+
+    $("#reset_bar_KI").click(function() {
+      $("#interest_rate_bar_KI").val("");
+      $("#underlying_bar_KI").val("");
+      $("#volatility_bar_KI").val("");
+      $("#number_observations_bar_KI").val("");
+      $("#number_paths_bar_KI").val("");
+      $("#strike_bar_KI").val("");
+      $("#time_bar_KI").val("");
+      $("#RadioOT_1_bar_KI").prop( "checked", false );
+      $("#RadioOT_2_bar_KI").prop( "checked", false );
+      $("#RadioBT_1_bar_KI").prop( "checked", false );
+      $("#RadioBT_2_bar_KI").prop( "checked", false );
+    });
+
+    $("#calculate_bar_KI").click(function(){
+      var interestRate = $("#interest_rate_bar_KI").val();
+      var stockPrice = $("#underlying_bar_KI").val();
+      var volatility = $("#volatility_bar_KI").val();
+      var numOfSteps = $("#number_observations_bar_KI").val();
+      var numOfPaths = $("#number_paths_bar_KI").val();
+      var barrier = $("#barrier_bar_KI").val();
+      var strike = $("#strike_bar_KI").val();
+      var time = $("#time_bar_KI").val();
+      var optionType = ($("#RadioOT_1_bar_KI").is(':checked')) ? "call" : "put";
+      var barrierType = ($("#RadioBT_1_bar_KI").is(':checked')) ? "up" : "down";
+
+      $.post({
+        url: "http://localhost:8080/barrierOption",
+        dataType : 'text',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          "interestRate" : interestRate,
+          "stockPrice" : stockPrice,
+          "strike" : strike,
+          "volatility" : volatility,
+          "time" : time,
+          "barrier" : barrier,
+          "numOfSteps" : numOfSteps,
+          "numOfPaths" : numOfPaths,
+          "optionType" : optionType,
+          "barrierType" : barrierType,
+          "mainBarrierType" : "in",
+        }),
+        success: function(data) {
+          $("#result_bar_KI_val").text(data);
+          $("#result_bar_KI").show();
+        },
+        error: function(jqXHR, exception) {
+            console.log(jqXHR);
+            alert("Error ! Please check if input is correct.");
+
+        }
+      })
+    });
+
+    $("#reset_bar_KO").click(function() {
+      $("#interest_rate_bar_KO").val("");
+      $("#underlying_bar_KO").val("");
+      $("#volatility_bar_KO").val("");
+      $("#number_observations_bar_KO").val("");
+      $("#number_paths_bar_KO").val("");
+      $("#strike_bar_KO").val("");
+      $("#time_bar_KO").val("");
+      $("#RadioOT_1_bar_KO").prop( "checked", false );
+      $("#RadioOT_2_bar_KO").prop( "checked", false );
+      $("#RadioBT_1_bar_KO").prop( "checked", false );
+      $("#RadioBT_2_bar_KO").prop( "checked", false );
+    });
+
+    $("#calculate_bar_KO").click(function(){
+      var interestRate = $("#interest_rate_bar_KO").val();
+      var stockPrice = $("#underlying_bar_KO").val();
+      var volatility = $("#volatility_bar_KO").val();
+      var numOfSteps = $("#number_observations_bar_KO").val();
+      var numOfPaths = $("#number_paths_bar_KO").val();
+      var barrier = $("#barrier_bar_KO").val();
+      var strike = $("#strike_bar_KO").val();
+      var time = $("#time_bar_KO").val();
+      var optionType = ($("#RadioOT_1_bar_KO").is(':checked')) ? "call" : "put";
+      var barrierType = ($("#RadioBT_1_bar_KO").is(':checked')) ? "up" : "down";
+
+      $.post({
+        url: "http://localhost:8080/barrierOption",
+        dataType : 'text',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          "interestRate" : interestRate,
+          "stockPrice" : stockPrice,
+          "strike" : strike,
+          "volatility" : volatility,
+          "time" : time,
+          "barrier" : barrier,
+          "numOfSteps" : numOfSteps,
+          "numOfPaths" : numOfPaths,
+          "optionType" : optionType,
+          "barrierType" : barrierType,
+          "mainBarrierType" : "out",
+        }),
+        success: function(data) {
+          $("#result_bar_KO_val").text(data);
+          $("#result_bar_KO").show();
+        },
+        error: function(jqXHR, exception) {
+            console.log(jqXHR);
+            alert("Error ! Please check if input is correct.");
+
+        }
+      })
+    });
+
+  });
+</script>
+</body>
+
+</html>
